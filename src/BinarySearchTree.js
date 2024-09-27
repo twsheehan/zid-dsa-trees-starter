@@ -1,3 +1,5 @@
+const Queue = require("./Queue");
+
 class BinarySearchTree {
   constructor(key = null, value = null, parent = null) {
     this.key = key;
@@ -95,39 +97,6 @@ class BinarySearchTree {
     }
   }
 
-  _replaceWith(node) {
-    if (this.parent) {
-      if (this == this.parent.left) {
-        this.parent.left = node;
-      } else if (this == this.parent.right) {
-        this.parent.right = node;
-      }
-
-      if (node) {
-        node.parent = this.parent;
-      }
-    } else {
-      if (node) {
-        this.key = node.key;
-        this.value = node.value;
-        this.left = node.left;
-        this.right = node.right;
-      } else {
-        this.key = null;
-        this.value = null;
-        this.left = null;
-        this.right = null;
-      }
-    }
-  }
-
-  _findMin() {
-    if (!this.left) {
-      return this;
-    }
-    return this.left._findMin();
-  }
-
   dfsInOrder(values = []) {
     // First, process the left node recursively
     if (this.left) {
@@ -177,6 +146,60 @@ class BinarySearchTree {
     values.push(this.value);
 
     return values;
+  }
+
+  bfs(tree, values = []) {
+    const queue = new Queue();
+    queue.enqueue(tree);
+    let node = queue.dequeue();
+    while (node) {
+      values.push(node.value);
+
+      if (node.left) {
+        queue.enqueue(node.left);
+      }
+
+      if (node.right) {
+        queue.enqueue(node.right);
+      }
+
+      node = queue.dequeue();
+
+      return values;
+    }
+  }
+
+  _replaceWith(node) {
+    if (this.parent) {
+      if (this == this.parent.left) {
+        this.parent.left = node;
+      } else if (this == this.parent.right) {
+        this.parent.right = node;
+      }
+
+      if (node) {
+        node.parent = this.parent;
+      }
+    } else {
+      if (node) {
+        this.key = node.key;
+        this.value = node.value;
+        this.left = node.left;
+        this.right = node.right;
+      } else {
+        this.key = null;
+        this.value = null;
+        this.left = null;
+        this.right = null;
+      }
+    }
+  }
+
+  _findMin() {
+    if (!this.left) {
+      return this;
+    }
+    return this.left._findMin();
   }
 }
 
