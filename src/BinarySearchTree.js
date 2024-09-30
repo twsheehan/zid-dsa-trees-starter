@@ -164,9 +164,9 @@ class BinarySearchTree {
       }
 
       node = queue.dequeue();
-
-      return values;
     }
+
+    return values;
   }
 
   getHeight(currentHeight = 0) {
