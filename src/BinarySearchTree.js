@@ -169,6 +169,58 @@ class BinarySearchTree {
     }
   }
 
+  getHeight(currentHeight = 0) {
+    // BASE CASE:
+    // If the current node doesn't have a left or right child,
+    // then the base case is reached, and the function can return the height.
+    if (!this.left && !this.right) return currentHeight;
+
+    // RECURSIVE CASE:
+    // Otherwise, compute the new height.
+    const newHeight = currentHeight + 1;
+
+    // If there's no left child, recurse down the right subtree only,
+    // passing down the height of the current node.
+    if (!this.left) return this.right.getHeight(newHeight);
+
+    // If there's no right child, recurse down the left subtree only,
+    // passing down the height of the current node.
+    if (!this.right) return this.left.getHeight(newHeight);
+
+    // If both children exist, recurse down both subtrees,
+    // passing down the height of the current node.
+    const leftHeight = this.left.getHeight(newHeight);
+    const rightHeight = this.right.getHeight(newHeight);
+
+    // Return the greater of the left or right subtree heights.
+    return Math.max(leftHeight, rightHeight);
+  }
+
+  isBST() {
+    const values = this.dfsInOrder();
+
+    for (let i = 1; i < values.length; i++) {
+      if (values[i] < values[i - 1]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  findKthLargestValue(k) {
+    const values = this.dfsInOrder();
+    const kthIndex = values.length - k;
+
+    if (kthIndex >= 0) {
+      return values[kthIndex];
+    } else {
+      console.error(
+        `${k}-th value exceeds the size: ${values.length} of the BST.`
+      );
+    }
+  }
+
   _replaceWith(node) {
     if (this.parent) {
       if (this == this.parent.left) {
@@ -209,5 +261,7 @@ bst.insert(19);
 bst.insert(18);
 bst.insert(15);
 bst.insert(28);
-console.log(bst);
-console.log(bst.dfsInOrder());
+console.log(bst.getHeight());
+console.log(bst.isBST());
+console.log(bst.findKthLargestValue(3));
+console.log(bst.findKthLargestValue(7));
